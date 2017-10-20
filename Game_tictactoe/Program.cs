@@ -1,21 +1,22 @@
 ﻿using System;
 using Utility;
 
-namespace Game_tictactoe
+namespace Game_tictactoes
 {
     class Launcher{
         static void Main(string[] args){
             Game g = new Game();
-            //g.startGame();
+            // g.startGame();
 
             Board b = new Board();
-            b.makeMove(0, 0, Board.CROSS);
-            b.makeMove(0, 1, Board.CIRCLE);
 
-            char[,] bo = b.getBoard();
+            b.makeMove(0, 2, Board.CIRCLE);
+            b.makeMove(1, 1, Board.CIRCLE);
+            b.makeMove(2, 0, Board.CIRCLE);
 
-            bo[1, 1] = 'X';
             print(b);
+            print(b.winningState());
+            print(b.countEmptyCells());
         }
 
         // convenience funcitons 
@@ -30,9 +31,9 @@ namespace Game_tictactoe
         public static GameState confirm_exit;
 
         public Game() {
-            splash_screen = new SplashScreen(this);
+            splash_screen = new SplashScreen();
             main_menue = new MainMenue();
-            confirm_exit = new ConfirmExit(this);
+            confirm_exit = new ConfirmExit();
         }
 
         public void startGame() {
@@ -44,11 +45,6 @@ namespace Game_tictactoe
                 current_state = next;               // assign the next state to be run in next iteration
             }
         }
-
-        //public void setState(GameState new_state){
-        //    current_state = new_state;
-        //    current_state.onStart();
-        //}
 
     }
 
@@ -64,11 +60,9 @@ namespace Game_tictactoe
     {
         private string SPLASH_SCREEN;
         private int WAIT_TIME;      // in milliseconds
-        private Game game;
 
-        public SplashScreen(Game game) {
-            this.game = game;
-            WAIT_TIME = 2000; // 3 seconds
+        public SplashScreen() {
+            WAIT_TIME = 2000; // 2 seconds
 
             SPLASH_SCREEN = @"
   _______   _____    _____            _______               _____            _______    ____    ______ 
@@ -116,10 +110,9 @@ namespace Game_tictactoe
 
     class ConfirmExit : GameState
     {
-        Game game;
         private ConsoleMenue menue;
 
-        public ConfirmExit(Game game) {
+        public ConfirmExit() {
             string[] options = { "Yes", "No" };
 
             menue = new ConsoleMenue("Exit Game?", options);
