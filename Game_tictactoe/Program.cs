@@ -6,7 +6,7 @@ namespace Game_tictactoes
     class Launcher{
         static void Main(string[] args){
             Game g = new Game();
-            // g.startGame();
+             g.startGame();
 
             Board b = new Board();
 
@@ -24,21 +24,15 @@ namespace Game_tictactoes
     }
 
     class Game {
-        private GameState current_state;
-
-        public static GameState splash_screen;
-        public static GameState main_menue;
-        public static GameState confirm_exit;
-
+        private GameView current_state;
+        
         public Game() {
-            splash_screen = new SplashScreen();
-            main_menue = new MainMenue();
-            confirm_exit = new ConfirmExit();
+
         }
 
         public void startGame() {
-            current_state = splash_screen;
-            GameState next;
+            current_state = GameView.splash_screen_view;
+            GameView next;
 
             while (true) {
                 next = current_state.onStart();     // run the current state and get the next state to run
@@ -48,15 +42,39 @@ namespace Game_tictactoes
 
     }
 
-    abstract class GameState {
-        // this function gets called when the program enters a game state
+    class GameView {
+        private static GameView splash_screen;
+        private static GameView main_menue;
+        private static GameView confirm_exit;
+
+        public static GameView splash_screen_view{
+            get {
+                return splash_screen ?? (splash_screen = new SplashScreen());
+            }
+        }
+
+        public static GameView main_menue_view{
+            get {
+                return main_menue ?? (main_menue = new MainMenue());
+            }
+        }
+
+        public static GameView confirm_exit_view{
+            get {
+                return confirm_exit ?? (confirm_exit = new ConfirmExit());
+            }
+        }
+
+        // this function gets called when the program enters a game state/view
         // it returns the next state the game will go into
-        public abstract GameState onStart();
+        virtual public GameView onStart() {
+            throw new NotImplementedException();
+        }
     }
 
     // This is the first state thegame enters. 
     // It shows the splash screen for WAIT_TIME seconds then Main menue is shown
-    class SplashScreen : GameState
+    class SplashScreen : GameView
     {
         private string SPLASH_SCREEN;
         private int WAIT_TIME;      // in milliseconds
@@ -75,18 +93,18 @@ namespace Game_tictactoes
 ";
         }
 
-        override public GameState onStart() {
+        override public GameView onStart() {
             Console.WriteLine(SPLASH_SCREEN);
             Console.WriteLine("\n");
 
             System.Threading.Thread.Sleep(WAIT_TIME);
             Console.Clear();
 
-            return Game.main_menue;
+            return GameView.main_menue_view;
         }
     }
 
-    class MainMenue : GameState
+    class MainMenue : GameView
     {
         private ConsoleMenue menue;
 
@@ -96,19 +114,19 @@ namespace Game_tictactoes
             menue = new ConsoleMenue("Main Menue", options);
         }
 
-        override public GameState onStart()
+        override public GameView onStart()
         {
             int selected = menue.getUserSelection();
 
             if (selected == 3)
-                return Game.confirm_exit;
+                return GameView.confirm_exit_view;
 
             // if someshow some invilid was returned by menue.getUserSelection()
-            return Game.main_menue;
+            return GameView.main_menue_view;
         }
     }
 
-    class ConfirmExit : GameState
+    class ConfirmExit : GameView
     {
         private ConsoleMenue menue;
 
@@ -118,7 +136,7 @@ namespace Game_tictactoes
             menue = new ConsoleMenue("Exit Game?", options);
         }
 
-        override public GameState onStart()
+        override public GameView onStart()
         {
             int selected = menue.getUserSelection();
 
@@ -127,15 +145,16 @@ namespace Game_tictactoes
                 Environment.Exit(0);
             }
 
-            return Game.main_menue;
+            // user selected no
+            return GameView.main_menue_view;
         }
     }
 
 
-    class PVP : GameState
+    class PVP : GameView
     {
-        override public GameState onStart() {
-            return Game.main_menue;
+        override public GameView onStart() {
+            return GameView.main_menue_view;
         }
     }
 
