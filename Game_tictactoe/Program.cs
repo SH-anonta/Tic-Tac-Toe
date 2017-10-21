@@ -5,7 +5,7 @@ namespace Game_tictactoes
 {
     class Launcher{
         static void Main(string[] args){
-            Game g = new Game();
+            ViewLauncher g = new ViewLauncher();
              g.startGame();
 
             Board b = new Board();
@@ -23,20 +23,20 @@ namespace Game_tictactoes
         private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
     }
 
-    class Game {
-        private GameView current_state;
+    class ViewLauncher {
+        private GameView current_view;
         
-        public Game() {
+        public ViewLauncher() {
 
         }
 
         public void startGame() {
-            current_state = GameView.splash_screen_view;
+            current_view = GameView.splash_screen_view;
             GameView next;
 
             while (true) {
-                next = current_state.onStart();     // run the current state and get the next state to run
-                current_state = next;               // assign the next state to be run in next iteration
+                next = current_view.onStart();     // run the current state and get the next state to run
+                current_view = next;               // assign the next state to be run in next iteration
             }
         }
 
@@ -158,17 +158,59 @@ namespace Game_tictactoes
         }
     }
 
-    class PlayGame{
-        
+    class GameEngine{
+        private Player player1;
+        private Player player2;
+
+        GameEngine(Player player1, Player player2){
+            this.player1 = player1;
+            this.player2 = player2;
+        }
+
+        public string startGame(){
+            const int MAX_TURNS= 9;
+            Player current_turn= player1;
+            Player next_turn = player1;
+
+
+            for (int i= 0; i< MAX_TURNS; i++) {
+
+            }
+
+            return "";
+        }
+
+        private void swap(ref Object a, ref Object b)
+        {
+            Object temp = a;
+            a = b;
+            b = temp;
+        }
     }
 
-    abstract class Player{
-        abstract public Tuple<int, int> makeMove(Board board);
+    class Player{
+        private char symbol;
+        private string player_name;
+
+        public Player(string name, char symbol){
+            this.player_name = name;
+            this.symbol = symbol;
+        }
+
+        virtual public Tuple<int, int> makeMove(Board board) {
+            throw new NotImplementedException();
+        }
+
     }
 
     class HumanPlayer: Player
     {
-        public override Tuple<int, int> makeMove(Board board)
+        public HumanPlayer(string name, char symbol): base(name, symbol)
+        {
+            
+        }
+
+        public Tuple<int, int> makeMove(Board board)
         {
             var move= new Tuple<int, int>(0,0);
 
