@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Utility
-{
-    class ConsoleMenue
-    {
+namespace Utility{
+    class ConsoleMenue{
         private const string SELECTED_INDICATOR = " <--";
         private string[] options;
         private string msg;
@@ -25,15 +23,7 @@ namespace Utility
             while (true) {
                 Console.Clear();
                 printOptions(selection);
-                System.ConsoleKey key = ConsoleKey.Clear;
-
-                // wait for the user to press a key
-                while (!Console.KeyAvailable) {
-                    // do nothing
-                }
-
-                // get the pressed key and take necessary steps
-                key = Console.ReadKey().Key;
+                System.ConsoleKey key = catchKeyPress(); //dummy data
 
                 if (key == ConsoleKey.Enter) {
                     break;
@@ -51,7 +41,16 @@ namespace Utility
             return selection;
         }
 
-        void printOptions(int selected)
+        private System.ConsoleKey catchKeyPress() {
+            // wait for the user to press a key
+            while (!Console.KeyAvailable) {
+                // do nothing
+            }
+
+            // get the pressed key and take necessary steps
+            return Console.ReadKey().Key;
+        }
+        private void printOptions(int selected)
         {
             Console.WriteLine(this.msg);
             for (int i = 0, len = options.Length; i < len; i++) {
