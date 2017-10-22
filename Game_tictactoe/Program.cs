@@ -27,7 +27,6 @@ namespace Game_tictactoes
         private GameView current_view;
         
         public ViewLauncher() {
-
         }
 
         public void startGame() {
@@ -151,10 +150,12 @@ namespace Game_tictactoes
     }
 
 
-    class PVP : GameView
+    class PlayGame : GameView
     {
         override public GameView onStart() {
             return GameView.main_menue_view;
+
+
         }
     }
 
@@ -197,6 +198,9 @@ namespace Game_tictactoes
             this.symbol = symbol;
         }
 
+        public string getPlayerName(){
+            return player_name;
+        }
         virtual public Tuple<int, int> makeMove(Board board) {
             throw new NotImplementedException();
         }
