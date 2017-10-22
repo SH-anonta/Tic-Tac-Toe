@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Game_tictactoes
+namespace Game_tictactoe
 {
     class Board{
         // board dimensions
