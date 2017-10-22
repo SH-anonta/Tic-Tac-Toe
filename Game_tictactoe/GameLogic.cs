@@ -5,8 +5,7 @@ using System.Text;
 namespace Game_tictactoe
 {
 
-    class GameEngine
-    {
+    class GameEngine{
         private Player player1;
         private Player player2;
 
@@ -52,15 +51,13 @@ namespace Game_tictactoe
         // matrix to represent the board
         private BoardSymbol[,] board;
 
-        public Board()
-        {
+        public Board(){
             board = new BoardSymbol[ROW, COL];
             resetBoard();
         }
 
         // make the board empty
-        private void resetBoard()
-        {
+        private void resetBoard(){
             for (int r = 0; r < ROW; r++) {
                 for (int c = 0; c < COL; c++) {
                     board[r, c] = BoardSymbol.Empty;
@@ -68,14 +65,28 @@ namespace Game_tictactoe
             }
         }
 
+        // helper class, converts string BoardSymbole enum value to it's string representative
+        private string getStringRepresentation(BoardSymbol symb) {
+            string symbol = "";
+
+            if (symb == BoardSymbol.Cross)
+                symbol= "X";
+            else if (symb == BoardSymbol.Circle)
+                symbol= "O";
+            else if (symb == BoardSymbol.Empty)
+                symbol= "-";
+
+            return symbol;
+        }
+
+
         // returns the staring (matrix) representation of the board
-        override public string ToString()
-        {
+        override public string ToString(){
             StringBuilder temp = new StringBuilder();
 
             for (int r = 0; r < ROW; r++) {
                 for (int c = 0; c < COL; c++) {
-                    temp.Append(board[r, c]);
+                    temp.Append(getStringRepresentation(board[r, c]));
                     temp.Append(" ");
                 }
                 temp.Append("\n");
@@ -84,29 +95,25 @@ namespace Game_tictactoe
             return temp.ToString();
         }
 
-        public BoardSymbol checkCell(int r, int c)
-        {
+        public BoardSymbol checkCell(int r, int c){
             //TODO: return a deep copy
             return board[r, c];
         }
 
-        public BoardSymbol[,] getBoard()
-        {
+        public BoardSymbol[,] getBoard(){
             // returning a deep copy 
             return board;
         }
 
         // set the value of a cell. value must always be O or X
-        public void makeMove(int r, int c, BoardSymbol value)
-        {
+        public void makeMove(int r, int c, BoardSymbol value){
             if (board[r, c] != BoardSymbol.Empty)
                 throw new ArgumentException("Another value in this cell aldready exists");
 
             board[r, c] = value;
         }
 
-        public int countEmptyCells()
-        {
+        public int countEmptyCells(){
             int empty_count = 0;
 
             for (int r = 0; r < ROW; r++) {
@@ -120,8 +127,7 @@ namespace Game_tictactoe
         }
 
         // check if the board is in a winning state
-        public bool winningState()
-        {
+        public bool winningState(){
             bool win = false;
 
             // check diagonal, and none of then are empty
@@ -168,14 +174,12 @@ namespace Game_tictactoe
 
     }
 
-    class HumanPlayer : Player
-    {
+    class HumanPlayer : Player{
         public HumanPlayer(string name, char symbol) : base(name, symbol){
 
         }
 
-        public Tuple<int, int> makeMove(Board board)
-        {
+        public Tuple<int, int> makeMove(Board board){
             var move = new Tuple<int, int>(0, 0);
 
             return move;
