@@ -50,6 +50,7 @@ namespace Utility{
             // get the pressed key and take necessary steps
             return Console.ReadKey().Key;
         }
+
         private void printOptions(int selected)
         {
             Console.WriteLine(this.msg);

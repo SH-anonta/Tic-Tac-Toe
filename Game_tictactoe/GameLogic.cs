@@ -21,6 +21,7 @@ namespace Game_tictactoe{
             Player current_turn_player = player1;
             Player next_turn_player = player2;
 
+            // default winner is no one
             Player winner= new DumbAI("Nobody", BoardSymbol.Circle);
 
             for (int i = 0; i < MAX_TURNS; i++) {
@@ -44,6 +45,7 @@ namespace Game_tictactoe{
             }
             
             const string outcome_msg_format = "{0} wins!";
+            Console.Clear();
             Console.WriteLine(board);
             Console.WriteLine(outcome_msg_format, winner.getPlayerName());
             
@@ -198,14 +200,15 @@ namespace Game_tictactoe{
 
         override public void makeMove(Board board){
             while (true) {
-                string input = Console.ReadLine();
-                int n = int.Parse(input);
-
-                int[] pos = numToCellPosition(n);
+                int key = getUserInput();
+                if(key == -1) continue;
+                
+                int[] pos = numToCellPosition(key);
                 int r = pos[0];
                 int c = pos[1];
 
                 if(board.checkCell(r,c) != BoardSymbol.Empty) {
+                    Console.WriteLine("Cell already used.");
                     continue;
                 }
 
@@ -224,6 +227,45 @@ namespace Game_tictactoe{
             return pos;
         }
 
+        private System.ConsoleKey catchKeyPress() {
+            // wait for the user to press a key
+            while (!Console.KeyAvailable) {
+                // do nothing
+            }
+
+            // read what key was pressed
+            return Console.ReadKey().Key;
+        }
+
+        // Get input from user on which cell to place cross or circle
+        private int getUserInput() {
+            int key = 1;
+            System.ConsoleKey press = catchKeyPress();
+
+            if (press == System.ConsoleKey.NumPad1)
+                key= 1;
+            else if (press == System.ConsoleKey.NumPad2)
+                key= 2;
+            else if (press == System.ConsoleKey.NumPad3)
+                key= 3;
+            else if (press == System.ConsoleKey.NumPad4)
+                key= 4;
+            else if (press == System.ConsoleKey.NumPad5)
+                key= 5;
+            else if (press == System.ConsoleKey.NumPad6)
+                key= 6;
+            else if (press == System.ConsoleKey.NumPad7)
+                key= 7;
+            else if (press == System.ConsoleKey.NumPad8)
+                key= 8;
+            else if (press == System.ConsoleKey.NumPad9)
+                key= 9;
+            else
+                // an invalid key was pressed
+                key= -1;
+            return key;
+        }
+
     }
 
     // randomly makes a move on an empty cell in the game board
@@ -233,6 +275,7 @@ namespace Game_tictactoe{
         } 
 
         override public void makeMove(Board board){
+
         }
     }
 

@@ -7,7 +7,7 @@ namespace Game_tictactoe
     class Launcher{
         static void Main(string[] args){
             ViewLauncher g = new ViewLauncher();
-            g.launchView();
+            //g.launchView();
             testGameEngine();
         }
 
