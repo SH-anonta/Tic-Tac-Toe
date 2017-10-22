@@ -14,8 +14,7 @@ namespace Game_tictactoe
             this.player2 = player2;
         }
 
-        public string startGame()
-        {
+        public string startGame(){
             const int MAX_TURNS = 9;
             Player current_turn = player1;
             Player next_turn = player1;
@@ -28,8 +27,7 @@ namespace Game_tictactoe
             return "";
         }
 
-        private void swap(ref Object a, ref Object b)
-        {
+        private void swap(ref Object a, ref Object b){
             Object temp = a;
             a = b;
             b = temp;
@@ -157,18 +155,15 @@ namespace Game_tictactoe
         private char symbol;
         private string player_name;
 
-        public Player(string name, char symbol)
-        {
+        public Player(string name, char symbol){
             this.player_name = name;
             this.symbol = symbol;
         }
 
-        public string getPlayerName()
-        {
+        public string getPlayerName(){
             return player_name;
         }
-        virtual public Tuple<int, int> makeMove(Board board)
-        {
+        virtual public Tuple<int, int> makeMove(Board board){
             throw new NotImplementedException();
         }
 
