@@ -7,13 +7,13 @@ namespace Game_tictactoe
     class Launcher{
         static void Main(string[] args){
             ViewLauncher g = new ViewLauncher();
-             g.startGame();
+            //g.startGame();
 
             Board b = new Board();
 
-            b.makeMove(0, 2, Board.CIRCLE);
-            b.makeMove(1, 1, Board.CIRCLE);
-            b.makeMove(2, 0, Board.CIRCLE);
+            b.makeMove(0, 2, BoardSymbol.Circle);
+            b.makeMove(1, 1, BoardSymbol.Circle);
+            b.makeMove(2, 0, BoardSymbol.Circle);
 
             print(b);
             print(b.winningState());
