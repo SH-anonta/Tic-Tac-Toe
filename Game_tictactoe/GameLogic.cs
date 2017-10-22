@@ -26,7 +26,8 @@ namespace Game_tictactoe{
 
             for (int i = 0; i < MAX_TURNS; i++) {
                 Console.Clear();
-                Console.WriteLine(current_turn_player.getPlayerName()+" turn" );
+                Console.WriteLine(current_turn_player.getPlayerName()+"'s turn" );
+                Console.WriteLine("------------------");
                 Console.WriteLine(board);
 
                 current_turn_player.makeMove(board);
@@ -46,9 +47,13 @@ namespace Game_tictactoe{
             
             const string outcome_msg_format = "{0} wins!";
             Console.Clear();
-            Console.WriteLine(board);
             Console.WriteLine(outcome_msg_format, winner.getPlayerName());
-            
+            Console.WriteLine("------------------");
+            Console.WriteLine(board);
+            // wait for user to press enter
+            Console.Read(); 
+            Console.Read(); 
+            Console.Read(); 
         }
     }
 
@@ -275,7 +280,26 @@ namespace Game_tictactoe{
         } 
 
         override public void makeMove(Board board){
+            while (true) {
+                int[] move = generateRandomMove();
+                int r= move[0];
+                int c= move[1];
 
+                if(board.checkCell(r, c) == BoardSymbol.Empty) {
+                    board.makeMove(r,c, my_symbol);
+                    break;
+                }
+            }
+        }
+
+        private int[] generateRandomMove() {
+            int[] move = {0,0};
+            
+            Random rand = new Random();
+            move[0]= rand.Next(0,3);
+            move[1]= rand.Next(0,3);
+
+            return move;
         }
     }
 

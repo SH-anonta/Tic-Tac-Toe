@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Utility;
+using Game_tictactoe;
 
 namespace Game_views
 {
@@ -102,19 +103,30 @@ namespace Game_views
 
         public MainMenue()
         {
-            string[] options = { "Play PVC", "Play PVP", "Credits", "Exit" };
+            string[] options = { "Play PVC", "Play PVP", "Exit" };
             menue = new ConsoleMenue("Main Menue", options);
         }
 
         override public GameView onStart()
         {
             int selected = menue.getUserSelection();
+            GameView next_view = null;
 
-            if (selected == 3)
-                return GameView.confirm_exit_view;
+            if (selected == 0) {
+                // todo access through property
+                next_view = new PVC_Difficulty();
+            }
+            else if(selected == 1) {
+                Player p1 = new HumanPlayer("Player1", BoardSymbol.Cross);
+                Player p2 = new HumanPlayer("Player2", BoardSymbol.Circle);
+                next_view = new PlayGame(new GameEngine(p1,p2));
+            }
+            else if (selected == 2){
+                next_view = GameView.confirm_exit_view;
+            }
 
             // if someshow some invilid was returned by menue.getUserSelection()
-            return GameView.main_menue_view;
+            return next_view;
         }
     }
 
@@ -143,11 +155,40 @@ namespace Game_views
         }
     }
 
+    class PVC_Difficulty: GameView{
+        override public GameView onStart(){
+            string[] options = { "Easy", "Hard", "Back"};
 
-    class PlayGame : GameView
-    {
-        override public GameView onStart()
-        {
+            ConsoleMenue menue = new ConsoleMenue("Pick Dificulty", options);
+            int selected = menue.getUserSelection();
+
+            Player p1 = new HumanPlayer("Player1", BoardSymbol.Cross);
+            Player p2 = null;
+
+            if (selected == 0) {
+                p2 = new DumbAI("Player2", BoardSymbol.Circle);
+            }
+            else if (selected == 1) {
+                p2 = new SmartAI("Player2", BoardSymbol.Circle);
+            }
+            else if (selected == 2) {
+                return GameView.main_menue_view;
+            }
+            
+            GameEngine game = new GameEngine(p1,p2);
+
+            return new PlayGame(game);
+        }
+    }
+
+
+    class PlayGame : GameView{
+        GameEngine game;
+        public PlayGame(GameEngine eng) {
+            game = eng;
+        }
+        override public GameView onStart(){
+            game.startGame();
             return GameView.main_menue_view;
         }
     }

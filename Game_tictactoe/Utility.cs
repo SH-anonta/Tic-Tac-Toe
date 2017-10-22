@@ -5,6 +5,7 @@ using System.Text;
 namespace Utility{
     class ConsoleMenue{
         private const string SELECTED_INDICATOR = " <--";
+        private const string MSG_OPTION_SEPARATOR = "---------------------";
         private string[] options;
         private string msg;
 
@@ -54,6 +55,7 @@ namespace Utility{
         private void printOptions(int selected)
         {
             Console.WriteLine(this.msg);
+            Console.WriteLine(MSG_OPTION_SEPARATOR);
             for (int i = 0, len = options.Length; i < len; i++) {
                 Console.Write(options[i]);
                 if (selected == i)
