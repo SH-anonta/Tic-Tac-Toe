@@ -10,8 +10,7 @@ namespace Game_tictactoe
         private Player player1;
         private Player player2;
 
-        GameEngine(Player player1, Player player2)
-        {
+        GameEngine(Player player1, Player player2){
             this.player1 = player1;
             this.player2 = player2;
         }
@@ -38,8 +37,7 @@ namespace Game_tictactoe
         }
     }
 
-    class Player
-    {
+    class Player{
         private char symbol;
         private string player_name;
 
@@ -62,8 +60,7 @@ namespace Game_tictactoe
 
     class HumanPlayer : Player
     {
-        public HumanPlayer(string name, char symbol) : base(name, symbol)
-        {
+        public HumanPlayer(string name, char symbol) : base(name, symbol){
 
         }
 
