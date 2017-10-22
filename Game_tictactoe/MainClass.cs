@@ -8,20 +8,32 @@ namespace Game_tictactoe
         static void Main(string[] args){
             ViewLauncher g = new ViewLauncher();
             //g.startGame();
+            testGameEngine();
+        }
 
+        // convenience funcitons 
+        private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
+        
+        private static void testBoard() {
             Board b = new Board();
 
             b.makeMove(0, 2, BoardSymbol.Circle);
             b.makeMove(1, 1, BoardSymbol.Circle);
             b.makeMove(2, 0, BoardSymbol.Circle);
-
+            
             print(b);
-            print(b.winningState());
-            print(b.countEmptyCells());
+            print(b.isWinningState());
         }
 
-        // convenience funcitons 
-        private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
+        private static void testGameEngine() {
+            
+            Player p = new HumanPlayer("Player1", BoardSymbol.Cross);
+            Player q = new HumanPlayer("Player2", BoardSymbol.Circle);
+            
+            GameEngine ge = new GameEngine(p,q);
+            ge.startGame();
+
+        }
     }
 
 }

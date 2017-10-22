@@ -14,7 +14,7 @@ namespace Game_views
         {
         }
 
-        public void startGame()
+        public void launchView()
         {
             current_view = GameView.splash_screen_view;
             GameView next;
