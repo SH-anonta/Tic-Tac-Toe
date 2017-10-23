@@ -329,7 +329,7 @@ namespace Game_tictactoe{
     // smart enough to never let it's opponent win. The game will either end with his victory or a tie
     class SmartAI: Player {
         private const int WIN_STATE_SCORE= 100;
-        private const int LOSE_STATE_SCORE= -100;
+        private const int LOSE_STATE_SCORE= -150;
         private const int TIE_STATE_SCORE= 0;
 
         private int best_move_r;
@@ -364,6 +364,7 @@ namespace Game_tictactoe{
                 // a win state here means whoever made the previous move wins
                 // the depth is used to alter the winning and loosing score
                 // the faster a state can be reached the higher it's score
+                //return maximize ?  LOSE_STATE_SCORE +depth: WIN_STATE_SCORE - depth;
                 return maximize ?  LOSE_STATE_SCORE +depth: WIN_STATE_SCORE - depth;
             }
             else if (board.isTieState()) {
@@ -407,6 +408,7 @@ namespace Game_tictactoe{
                 }
             }
 
+            // theis is where the next cell position is stored
             if (maximize) {
                 best_move_r= minmax_r;
                 best_move_c= minmax_c;
