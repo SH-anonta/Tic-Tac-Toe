@@ -8,21 +8,28 @@ namespace Game_tictactoe
         static void Main(string[] args){
             ViewLauncher g = new ViewLauncher();
             g.launchView();
-            //testGameEngine();
+            testSmartAI();
         }
 
-        // convenience funcitons 
+        // some driver funcitons
         private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
         
         private static void testBoard() {
             Board b = new Board();
 
+            b.makeMove(0, 0, BoardSymbol.Circle);
+            b.makeMove(0, 1, BoardSymbol.Cross);
             b.makeMove(0, 2, BoardSymbol.Circle);
-            b.makeMove(1, 1, BoardSymbol.Circle);
+            b.makeMove(1, 0, BoardSymbol.Cross);
+            b.makeMove(2, 0, BoardSymbol.Circle);
+            b.makeMove(2, 0, BoardSymbol.Circle);
+            b.makeMove(2, 0, BoardSymbol.Circle);
             b.makeMove(2, 0, BoardSymbol.Circle);
             
             print(b);
             print(b.isWinningState());
+            print(b.isTieState());
+
         }
 
         private static void testGameEngine() {
@@ -33,6 +40,17 @@ namespace Game_tictactoe
             GameEngine ge = new GameEngine(p,q);
             ge.startGame();
 
+        }
+
+        private static void testSmartAI() {
+            Board b = new Board();
+
+            b.makeMove(0, 2, BoardSymbol.Circle);
+            b.makeMove(1, 1, BoardSymbol.Circle);
+            b.makeMove(2, 0, BoardSymbol.Circle);
+            
+            SmartAI s = new SmartAI("smartasss", BoardSymbol.Cross);
+            s.makeMove(b);
         }
     }
 

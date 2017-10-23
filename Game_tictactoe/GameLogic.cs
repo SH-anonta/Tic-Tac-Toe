@@ -62,7 +62,7 @@ namespace Game_tictactoe{
     enum BoardSymbol{
         Cross,
         Circle,
-        Empty
+        Empty       
     }
 
     class Board{
@@ -117,7 +117,7 @@ namespace Game_tictactoe{
             return temp.ToString();
         }
 
-        public BoardSymbol checkCell(int r, int c){
+        public BoardSymbol getCell(int r, int c){
             //TODO: return a deep copy
             return board[r, c];
         }
@@ -135,7 +135,9 @@ namespace Game_tictactoe{
             board[r, c] = value;
         }
 
-
+        public void clearCell(int r, int c) {
+            board[r,c] = BoardSymbol.Empty;
+        }
         // check if the board is in a winning state
         public bool isWinningState(){
             bool win = false;
@@ -160,6 +162,27 @@ namespace Game_tictactoe{
             }
 
             return win;
+        }
+
+        public bool isTieState() {
+            bool tie= false;
+
+            if(! isWinningState() && countEmptyCells() == 0)
+                tie = true;
+
+            return tie;
+        }
+
+        public int countEmptyCells() {
+            int count = 0;
+            for(int i= 0; i<ROW; i++) {
+                for(int j= 0; j<COL; j++) {
+                    if(board[i,j] == BoardSymbol.Empty)
+                        count++;
+                }
+            }
+
+            return count;
         }
     }
 
@@ -188,16 +211,16 @@ namespace Game_tictactoe{
     class HumanPlayer : Player{
         // mapping of key buttons(1-9) to board cell possition
         private static Tuple<int, int>[] KEY_POSITION_MAP= { 
-                    new Tuple<int, int>(2,0),
-                    new Tuple<int, int>(2,1),
-                    new Tuple<int, int>(2,2),
-                    new Tuple<int, int>(1,0),
-                    new Tuple<int, int>(1,1),
-                    new Tuple<int, int>(1,2),
-                    new Tuple<int, int>(0,0),
-                    new Tuple<int, int>(0,1),
-                    new Tuple<int, int>(0,2)
-                };
+                new Tuple<int, int>(2,0),
+                new Tuple<int, int>(2,1),
+                new Tuple<int, int>(2,2),
+                new Tuple<int, int>(1,0),
+                new Tuple<int, int>(1,1),
+                new Tuple<int, int>(1,2),
+                new Tuple<int, int>(0,0),
+                new Tuple<int, int>(0,1),
+                new Tuple<int, int>(0,2)
+            };
 
         public HumanPlayer(string name, BoardSymbol my_symbol) : base(name, my_symbol){
             
@@ -212,7 +235,7 @@ namespace Game_tictactoe{
                 int r = pos[0];
                 int c = pos[1];
 
-                if(board.checkCell(r,c) != BoardSymbol.Empty) {
+                if(board.getCell(r,c) != BoardSymbol.Empty) {
                     Console.WriteLine("Cell already used.");
                     continue;
                 }
@@ -285,7 +308,7 @@ namespace Game_tictactoe{
                 int r= move[0];
                 int c= move[1];
 
-                if(board.checkCell(r, c) == BoardSymbol.Empty) {
+                if(board.getCell(r, c) == BoardSymbol.Empty) {
                     board.makeMove(r,c, my_symbol);
                     break;
                 }
@@ -305,12 +328,105 @@ namespace Game_tictactoe{
 
     // smart enough to never let it's opponent win. The game will either end with his victory or a tie
     class SmartAI: Player {
-        public SmartAI(string name, BoardSymbol my_symbol) : base(name, my_symbol){
+        private const int WIN_STATE_SCORE= 100;
+        private const int LOSE_STATE_SCORE= -100;
+        private const int TIE_STATE_SCORE= 0;
 
+        private int best_move_r;
+        private int best_move_c;
+
+        public SmartAI(string name, BoardSymbol my_symbol) : base(name, my_symbol){
+            best_move_r= 0;
+            best_move_r= 0;
         }
 
         override public void makeMove(Board board){
+            int val = findBestMove(board, true, my_symbol,0);
+            //print("Best", val);
+            print("r",best_move_r);
+            print("c",best_move_c);
 
+            board.makeMove(best_move_r, best_move_c, my_symbol);
+        }
+
+        private static int max(int a, int b) {
+            return a>b? a : b;
+        }
+        private static int min(int a, int b) {
+            return a<b? a : b;
+        }
+
+        private int findBestMove(Board board, bool maximize, BoardSymbol symbol, int depth) {
+            //print(maximize);
+            //Console.Read();
+
+            if(board.isWinningState()){
+                // a win state here means whoever made the previous move wins
+                // the depth is used to alter the winning and loosing score
+                // the faster a state can be reached the higher it's score
+                return maximize ?  LOSE_STATE_SCORE +depth: WIN_STATE_SCORE - depth;
+            }
+            else if (board.isTieState()) {
+                return TIE_STATE_SCORE;
+            }
+
+            BoardSymbol next_symbol= getOppositeSymbol(symbol);
+            int minmax= maximize ? -10000: 10000;  // best score for maximizer or minimizer
+            int minmax_r= 0;   //next move row position for best score
+            int minmax_c= 0;   //next move column position for best score 
+            
+            for (int r= 0; r<3; r++) {
+                for(int c= 0; c<3; c++) {
+                    // if cell is already taken, skip
+                    if(board.getCell(r,c) != BoardSymbol.Empty)
+                        continue;
+                    
+                    // make move
+                    board.makeMove(r,c,next_symbol);
+                        
+                    // find the best decision for the opposing player
+                    // if this is maximizer, make call to minimize and vice versa
+                    int score = findBestMove(board, !maximize, next_symbol, depth+1);
+                    
+                    // get the best value for maximizer or minimizer
+                    if (maximize) {
+                        if(score > minmax) {
+                            minmax = score;
+                            minmax_r = r;
+                            minmax_c = c;
+                        }
+                    }
+                    else if(score < minmax){
+                        minmax = score;
+                        minmax_r = r;
+                        minmax_c = c;
+                    }
+
+                    // undo move
+                    board.clearCell(r,c);
+                }
+            }
+
+            if (maximize) {
+                best_move_r= minmax_r;
+                best_move_c= minmax_c;
+            }
+            
+            return minmax;
+        }
+        
+        // todo remove
+        private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
+
+        private BoardSymbol getOppositeSymbol(BoardSymbol symb){
+            BoardSymbol opposite = BoardSymbol.Empty;   // invalid value
+
+            if(symb == BoardSymbol.Circle) 
+                opposite = BoardSymbol.Cross;
+            else
+                opposite = BoardSymbol.Circle;
+
+            return opposite;
         }
     }
 }
