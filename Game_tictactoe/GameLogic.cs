@@ -365,10 +365,10 @@ namespace Game_tictactoe{
                 // the depth is used to alter the winning and loosing score
                 // the faster a state can be reached the higher it's score
                 //return maximize ?  LOSE_STATE_SCORE +depth: WIN_STATE_SCORE - depth;
-                return maximize ?  LOSE_STATE_SCORE +depth: WIN_STATE_SCORE - depth;
+                return maximize ?  LOSE_STATE_SCORE + depth: WIN_STATE_SCORE - depth;
             }
             else if (board.isTieState()) {
-                return TIE_STATE_SCORE;
+                return TIE_STATE_SCORE-depth;
             }
 
             BoardSymbol next_symbol= getOppositeSymbol(symbol);
