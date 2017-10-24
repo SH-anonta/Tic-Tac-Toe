@@ -72,7 +72,7 @@ namespace Game_views
 
         public SplashScreen()
         {
-            WAIT_TIME = 2000; // 2 seconds
+            WAIT_TIME = 1000; // 2 seconds
 
             SPLASH_SCREEN = @"
   _______   _____    _____            _______               _____            _______    ____    ______ 

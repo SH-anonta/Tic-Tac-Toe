@@ -328,8 +328,8 @@ namespace Game_tictactoe{
 
     // smart enough to never let it's opponent win. The game will either end with his victory or a tie
     class SmartAI: Player {
-        private const int WIN_STATE_SCORE= 100;
-        private const int LOSE_STATE_SCORE= -150;
+        private const int WIN_STATE_SCORE= 150;
+        private const int LOSE_STATE_SCORE= -100;
         private const int TIE_STATE_SCORE= 0;
 
         private int best_move_r;
@@ -343,9 +343,7 @@ namespace Game_tictactoe{
         override public void makeMove(Board board){
             int val = findBestMove(board, true, my_symbol,0);
             //print("Best", val);
-            print("r",best_move_r);
-            print("c",best_move_c);
-
+            //Console.ReadLine();
             board.makeMove(best_move_r, best_move_c, my_symbol);
         }
 
@@ -356,19 +354,32 @@ namespace Game_tictactoe{
             return a<b? a : b;
         }
 
+        private static int MoveBonus(int r, int c) {
+            int bons= 0;
+            const int bon= 2;
+            if(r == 0 && c == 0)
+                bons = bon;
+            else if(r == 0 && c == 2)
+                bons = bon;
+            else if(r == 2 && c == 0)
+                bons = bon;
+            else if(r == 2 && c == 2)
+                bons = bon;
+            return bons;
+        }
+
         private int findBestMove(Board board, bool maximize, BoardSymbol symbol, int depth) {
-            //print(maximize);
-            //Console.Read();
 
             if(board.isWinningState()){
                 // a win state here means whoever made the previous move wins
                 // the depth is used to alter the winning and loosing score
                 // the faster a state can be reached the higher it's score
-                //return maximize ?  LOSE_STATE_SCORE +depth: WIN_STATE_SCORE - depth;
-                return maximize ?  LOSE_STATE_SCORE + depth: WIN_STATE_SCORE - depth;
+                int score = maximize ?  LOSE_STATE_SCORE + depth: WIN_STATE_SCORE - depth;
+                return score;
             }
-            else if (board.isTieState()) {
-                return TIE_STATE_SCORE-depth;
+            else if (board.countEmptyCells() == 0) {
+                // if this is a tie state
+                return TIE_STATE_SCORE - depth;
             }
 
             BoardSymbol next_symbol= getOppositeSymbol(symbol);
@@ -378,23 +389,31 @@ namespace Game_tictactoe{
             
             for (int r= 0; r<3; r++) {
                 for(int c= 0; c<3; c++) {
-                    // if cell is already taken, skip
+                    // if this cell is already taken, skip
                     if(board.getCell(r,c) != BoardSymbol.Empty)
                         continue;
                     
                     // make move
-                    board.makeMove(r,c,next_symbol);
+                    board.makeMove(r,c,symbol);
                         
                     // find the best decision for the opposing player
                     // if this is maximizer, make call to minimize and vice versa
                     int score = findBestMove(board, !maximize, next_symbol, depth+1);
                     
+                    // undo move
+                    board.clearCell(r,c);
+                    
+                    //print("Out",score,minmax, r, c, maximize);
+
                     // get the best value for maximizer or minimizer
                     if (maximize) {
                         if(score > minmax) {
                             minmax = score;
                             minmax_r = r;
                             minmax_c = c;
+
+                            
+                            //print(minmax, r, c, maximize);
                         }
                     }
                     else if(score < minmax){
@@ -402,21 +421,21 @@ namespace Game_tictactoe{
                         minmax_r = r;
                         minmax_c = c;
                     }
-
-                    // undo move
-                    board.clearCell(r,c);
                 }
             }
 
-            // theis is where the next cell position is stored
-            if (maximize) {
+            // theis is where the next move cell position is stored
+            if(maximize) {
                 best_move_r= minmax_r;
                 best_move_c= minmax_c;
             }
-            
+
             return minmax;
         }
         
+        private void inspect(Board b) {
+        }
+
         // todo remove
         private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
 
@@ -429,6 +448,10 @@ namespace Game_tictactoe{
                 opposite = BoardSymbol.Circle;
 
             return opposite;
+        }
+
+        private int[] winInOneMove(Board board, BoardSymbol sym) {
+            return new int[2];
         }
     }
 }
