@@ -8,7 +8,6 @@ namespace Game_tictactoe
         static void Main(string[] args){
             ViewLauncher g = new ViewLauncher();
             g.launchView();
-            testSmartAI();
         }
 
         // some driver funcitons
