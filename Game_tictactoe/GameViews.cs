@@ -21,6 +21,7 @@ namespace Game_views
             GameView next;
 
             while (true) {
+                Console.Clear();
                 next = current_view.onStart();     // run the current state and get the next state to run
                 current_view = next;               // assign the next state to be run in next iteration
             }
@@ -33,6 +34,7 @@ namespace Game_views
         private static GameView splash_screen;
         private static GameView main_menue;
         private static GameView confirm_exit;
+        private static GameView help;
 
         public static GameView splash_screen_view
         {
@@ -52,6 +54,12 @@ namespace Game_views
         {
             get {
                 return confirm_exit ?? (confirm_exit = new ConfirmExit());
+            }
+        }
+
+        public static GameView help_view {
+            get {
+                return help ?? (help = new HelpView());
             }
         }
 
@@ -103,7 +111,7 @@ namespace Game_views
 
         public MainMenue()
         {
-            string[] options = { "Play PVC", "Play PVP", "Exit" };
+            string[] options = { "Play PVC", "Play PVP", "Help", "Exit" };
             menue = new ConsoleMenue("Main Menue", options);
         }
 
@@ -122,6 +130,9 @@ namespace Game_views
                 next_view = new PlayGame(new GameEngine(p1,p2));
             }
             else if (selected == 2){
+                next_view = GameView.help_view;
+            }
+            else if (selected == 3){
                 next_view = GameView.confirm_exit_view;
             }
 
@@ -193,4 +204,45 @@ namespace Game_views
         }
     }
 
+    class HelpView : GameView {
+        const string SCREEN_CONTENT= @"
+Help screen (press Esc to go back)
+--------------------------------------------
+Game controls:
+Use the numpad to enter X or O into a cell, 
+
+    7 8 9   
+    4 5 6
+    1 2 3
+
+Pressing 7 will enter a X or O into cell 0,0
+Pressing 8 will enter a X or O into cell 0,1
+and so forth
+
+";
+        public HelpView() {
+
+        }
+
+        override public GameView onStart(){
+            Console.WriteLine(SCREEN_CONTENT);
+            while (true) {
+                ConsoleKey pressed_key= catchKeyPress();
+                if(pressed_key == ConsoleKey.Escape)
+                    break;
+            }
+            return GameView.main_menue_view;
+        }
+
+
+        private static System.ConsoleKey catchKeyPress() {
+            // wait for the user to press a key
+            while (!Console.KeyAvailable) {
+                // do nothing
+            }
+
+            // get the pressed key and take necessary steps
+            return Console.ReadKey().Key;
+        }
+    }
 }
