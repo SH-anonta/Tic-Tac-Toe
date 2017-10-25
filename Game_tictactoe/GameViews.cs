@@ -219,7 +219,7 @@ Pressing 7 will enter a X or O into cell 0,0
 Pressing 8 will enter a X or O into cell 0,1
 and so forth
 
-Incase you dont have a numpad, use the following heys to enter X or O into a cell
+Incase you dont have a numpad, use the following keys to enter X or O into a cell
 
     Q W E
     A S D
