@@ -70,6 +70,15 @@ namespace Game_tictactoe{
         private const int ROW = 3;
         private const int COL = 3;
 
+        // this is used with stirng format
+        private const string BOARD_STRING_FORMAT= @"
+ {0}  | {1} | {2}
+____|___|____
+ {3}  | {4} | {5}
+____|___|____
+ {6}  | {7} | {8}
+    |   |
+";
         // matrix to represent the board
         private BoardSymbol[,] board;
 
@@ -88,7 +97,7 @@ namespace Game_tictactoe{
         }
 
         // helper class, converts string BoardSymbole enum value to it's string representative
-        private string getStringRepresentation(BoardSymbol symb) {
+        private string enumToStr(BoardSymbol symb) {
             string symbol = "";
 
             if (symb == BoardSymbol.Cross)
@@ -104,17 +113,16 @@ namespace Game_tictactoe{
 
         // returns the staring (matrix) representation of the board
         override public string ToString(){
-            StringBuilder temp = new StringBuilder();
-
-            for (int r = 0; r < ROW; r++) {
-                for (int c = 0; c < COL; c++) {
-                    temp.Append(getStringRepresentation(board[r, c]));
-                    temp.Append(" ");
-                }
-                temp.Append("\n");
-            }
-
-            return temp.ToString();
+            return string.Format(BOARD_STRING_FORMAT, 
+                enumToStr(board[0,0]),
+                enumToStr(board[0,1]),
+                enumToStr(board[0,2]),
+                enumToStr(board[1,0]),
+                enumToStr(board[1,1]),
+                enumToStr(board[1,2]),
+                enumToStr(board[2,0]),
+                enumToStr(board[2,1]),
+                enumToStr(board[2,2]));
         }
 
         public BoardSymbol getCell(int r, int c){
