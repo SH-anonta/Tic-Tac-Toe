@@ -332,6 +332,7 @@ namespace Game_tictactoe{
         private const int LOSE_STATE_SCORE= -100;
         private const int TIE_STATE_SCORE= 0;
 
+        // TODO turn them into local variables
         private int best_move_r;
         private int best_move_c;
 
@@ -345,27 +346,6 @@ namespace Game_tictactoe{
             //print("Best", val);
             //Console.ReadLine();
             board.makeMove(best_move_r, best_move_c, my_symbol);
-        }
-
-        private static int max(int a, int b) {
-            return a>b? a : b;
-        }
-        private static int min(int a, int b) {
-            return a<b? a : b;
-        }
-
-        private static int MoveBonus(int r, int c) {
-            int bons= 0;
-            const int bon= 2;
-            if(r == 0 && c == 0)
-                bons = bon;
-            else if(r == 0 && c == 2)
-                bons = bon;
-            else if(r == 2 && c == 0)
-                bons = bon;
-            else if(r == 2 && c == 2)
-                bons = bon;
-            return bons;
         }
 
         private int findBestMove(Board board, bool maximize, BoardSymbol symbol, int depth) {
@@ -433,12 +413,12 @@ namespace Game_tictactoe{
             return minmax;
         }
         
-        private void inspect(Board b) {
+        private static int max(int a, int b) {
+            return a>b? a : b;
         }
-
-        // todo remove
-        private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
-
+        private static int min(int a, int b) {
+            return a<b? a : b;
+        }
         private BoardSymbol getOppositeSymbol(BoardSymbol symb){
             BoardSymbol opposite = BoardSymbol.Empty;   // invalid value
 
@@ -450,8 +430,5 @@ namespace Game_tictactoe{
             return opposite;
         }
 
-        private int[] winInOneMove(Board board, BoardSymbol sym) {
-            return new int[2];
-        }
     }
 }
