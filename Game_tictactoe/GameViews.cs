@@ -209,7 +209,7 @@ namespace Game_views
 Help screen (press Esc to go back)
 --------------------------------------------
 Game controls:
-Use the numpad to enter X or O into a cell, 
+Use the numpad to enter X or O into a cell
 
     7 8 9   
     4 5 6
@@ -219,6 +219,16 @@ Pressing 7 will enter a X or O into cell 0,0
 Pressing 8 will enter a X or O into cell 0,1
 and so forth
 
+Incase you dont have a numpad, use the following heys to enter X or O into a cell
+
+    Q W E
+    A S D
+    Z X C
+
+Pressing Q will enter a X or O into cell 0,0
+Pressing W will enter a X or O into cell 0,1
+and so forth
+(Case doesn't matter)
 ";
         public HelpView() {
 
