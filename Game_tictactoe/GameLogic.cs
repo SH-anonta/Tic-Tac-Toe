@@ -72,12 +72,12 @@ namespace Game_tictactoe{
 
         // this is used with stirng format
         private const string BOARD_STRING_FORMAT= @"
- {0}  | {1} | {2}
-____|___|____
- {3}  | {4} | {5}
-____|___|____
- {6}  | {7} | {8}
-    |   |
+              {0}  | {1} | {2}
+             ____|___|____
+              {3}  | {4} | {5}
+             ____|___|____
+              {6}  | {7} | {8}
+                 |   |
 ";
         // matrix to represent the board
         private BoardSymbol[,] board;
