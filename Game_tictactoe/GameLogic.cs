@@ -210,30 +210,74 @@ namespace Game_tictactoe{
     // asks the user through console and uses the human's decision to make a move
     class HumanPlayer : Player{
         // mapping of key buttons(1-9) to board cell possition
-        private static Tuple<int, int>[] KEY_POSITION_MAP= { 
-                new Tuple<int, int>(2,0),
-                new Tuple<int, int>(2,1),
-                new Tuple<int, int>(2,2),
-                new Tuple<int, int>(1,0),
-                new Tuple<int, int>(1,1),
-                new Tuple<int, int>(1,2),
-                new Tuple<int, int>(0,0),
-                new Tuple<int, int>(0,1),
-                new Tuple<int, int>(0,2)
-            };
+
+        // assosiates keyboard buttons to moves in the game board
+        private static Dictionary<ConsoleKey, Tuple<int,int>> KEY_POSITION_MAP;
+        
+        // used as default value when doing getwithdefault on the mapp
+        private static Tuple<int,int> INVALID_POSITION;
+
+        private static void initializeKeyPositionMap() {
+            KEY_POSITION_MAP = new Dictionary<ConsoleKey, Tuple<int, int>>();
+            INVALID_POSITION = new Tuple<int, int>(-1,-1);
+            
+            Tuple<int, int> cell00 = new Tuple<int, int>(0,0);
+            Tuple<int, int> cell01 = new Tuple<int, int>(0,1);
+            Tuple<int, int> cell02 = new Tuple<int, int>(0,2);
+            Tuple<int, int> cell10 = new Tuple<int, int>(1,0);
+            Tuple<int, int> cell11 = new Tuple<int, int>(1,1);
+            Tuple<int, int> cell12 = new Tuple<int, int>(1,2);
+            Tuple<int, int> cell20 = new Tuple<int, int>(2,0);
+            Tuple<int, int> cell21 = new Tuple<int, int>(2,1);
+            Tuple<int, int> cell22 = new Tuple<int, int>(2,2);
+
+            
+            KEY_POSITION_MAP.TryAdd(ConsoleKey.Q, cell00);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad7, cell00);
+            
+            KEY_POSITION_MAP.Add(ConsoleKey.W, cell01);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad8, cell01);
+
+            KEY_POSITION_MAP.Add(ConsoleKey.E, cell02);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad9, cell02);
+
+            KEY_POSITION_MAP.Add(ConsoleKey.A, cell10);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad4, cell10);
+
+            KEY_POSITION_MAP.Add(ConsoleKey.S, cell11);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad5, cell11);
+            
+            KEY_POSITION_MAP.Add(ConsoleKey.D, cell12);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad6, cell12);
+
+            KEY_POSITION_MAP.Add(ConsoleKey.Z, cell20);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad1, cell20);
+
+            KEY_POSITION_MAP.Add(ConsoleKey.X, cell21);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad2, cell21);
+
+            KEY_POSITION_MAP.Add(ConsoleKey.C, cell22);
+            KEY_POSITION_MAP.Add(ConsoleKey.NumPad3, cell22);
+        }
 
         public HumanPlayer(string name, BoardSymbol my_symbol) : base(name, my_symbol){
-            
+            // the association must be made only once
+            if(KEY_POSITION_MAP == null) {
+                initializeKeyPositionMap();
+            }
         }
 
         override public void makeMove(Board board){
             while (true) {
-                int key = getUserInput();
-                if(key == -1) continue;
+                ConsoleKey pressed_key =  catchKeyPress();
+
+                Tuple<int,int> move =  KEY_POSITION_MAP.GetValueOrDefault(pressed_key, INVALID_POSITION);
+
+                if(move == INVALID_POSITION)
+                    continue;
                 
-                int[] pos = numToCellPosition(key);
-                int r = pos[0];
-                int c = pos[1];
+                int r = move.Item1;
+                int c = move.Item2;
 
                 if(board.getCell(r,c) != BoardSymbol.Empty) {
                     Console.WriteLine("Cell already used.");
@@ -243,16 +287,6 @@ namespace Game_tictactoe{
                 board.makeMove(r,c, my_symbol);
                 break;
             }
-        }
-
-        // returns a pair (r,c), that indicates the row and column number of n in the standard keyboard
-        private int[] numToCellPosition(int n) {
-            // index 0 and 1 store row and column number respectively
-            int[] pos = {0,0};
-            pos[0] = KEY_POSITION_MAP[n-1].Item1;
-            pos[1] = KEY_POSITION_MAP[n-1].Item2;
-
-            return pos;
         }
 
         private System.ConsoleKey catchKeyPress() {
@@ -265,35 +299,7 @@ namespace Game_tictactoe{
             return Console.ReadKey().Key;
         }
 
-        // Get input from user on which cell to place cross or circle
-        private int getUserInput() {
-            int key = 1;
-            System.ConsoleKey press = catchKeyPress();
-
-            if (press == System.ConsoleKey.NumPad1)
-                key= 1;
-            else if (press == System.ConsoleKey.NumPad2)
-                key= 2;
-            else if (press == System.ConsoleKey.NumPad3)
-                key= 3;
-            else if (press == System.ConsoleKey.NumPad4)
-                key= 4;
-            else if (press == System.ConsoleKey.NumPad5)
-                key= 5;
-            else if (press == System.ConsoleKey.NumPad6)
-                key= 6;
-            else if (press == System.ConsoleKey.NumPad7)
-                key= 7;
-            else if (press == System.ConsoleKey.NumPad8)
-                key= 8;
-            else if (press == System.ConsoleKey.NumPad9)
-                key= 9;
-            else
-                // an invalid key was pressed
-                key= -1;
-            return key;
-        }
-
+       
     }
 
     // randomly makes a move on an empty cell in the game board
@@ -332,6 +338,7 @@ namespace Game_tictactoe{
         private const int LOSE_STATE_SCORE= -100;
         private const int TIE_STATE_SCORE= 0;
 
+        // TODO turn them into local variables
         private int best_move_r;
         private int best_move_c;
 
@@ -345,27 +352,6 @@ namespace Game_tictactoe{
             //print("Best", val);
             //Console.ReadLine();
             board.makeMove(best_move_r, best_move_c, my_symbol);
-        }
-
-        private static int max(int a, int b) {
-            return a>b? a : b;
-        }
-        private static int min(int a, int b) {
-            return a<b? a : b;
-        }
-
-        private static int MoveBonus(int r, int c) {
-            int bons= 0;
-            const int bon= 2;
-            if(r == 0 && c == 0)
-                bons = bon;
-            else if(r == 0 && c == 2)
-                bons = bon;
-            else if(r == 2 && c == 0)
-                bons = bon;
-            else if(r == 2 && c == 2)
-                bons = bon;
-            return bons;
         }
 
         private int findBestMove(Board board, bool maximize, BoardSymbol symbol, int depth) {
@@ -433,12 +419,12 @@ namespace Game_tictactoe{
             return minmax;
         }
         
-        private void inspect(Board b) {
+        private static int max(int a, int b) {
+            return a>b? a : b;
         }
-
-        // todo remove
-        private static void print(params object[] tokens) { Console.WriteLine(string.Join(" ", tokens)); }
-
+        private static int min(int a, int b) {
+            return a<b? a : b;
+        }
         private BoardSymbol getOppositeSymbol(BoardSymbol symb){
             BoardSymbol opposite = BoardSymbol.Empty;   // invalid value
 
@@ -448,10 +434,6 @@ namespace Game_tictactoe{
                 opposite = BoardSymbol.Circle;
 
             return opposite;
-        }
-
-        private int[] winInOneMove(Board board, BoardSymbol sym) {
-            return new int[2];
         }
     }
 }
