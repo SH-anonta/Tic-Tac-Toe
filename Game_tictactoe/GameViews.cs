@@ -112,7 +112,7 @@ namespace Game_views
         public MainMenue()
         {
             string[] options = { "Play PVC", "Play PVP", "Help", "Exit" };
-            menue = new ConsoleMenue("Main Menue", options);
+            menue = new ConsoleMenue("Main Menue (Use arrow keys to move, press enter to choose)", options);
         }
 
         override public GameView onStart()
@@ -206,29 +206,29 @@ namespace Game_views
 
     class HelpView : GameView {
         const string SCREEN_CONTENT= @"
-Help screen (press Esc to go back)
---------------------------------------------
-Game controls:
-Use the numpad to enter X or O into a cell
-
-    7 8 9   
-    4 5 6
-    1 2 3
-
-Pressing 7 will enter a X or O into cell 0,0
-Pressing 8 will enter a X or O into cell 0,1
-and so forth
-
-Incase you dont have a numpad, use the following keys to enter X or O into a cell
-
-    Q W E
-    A S D
-    Z X C
-
-Pressing Q will enter a X or O into cell 0,0
-Pressing W will enter a X or O into cell 0,1
-and so forth
-(Case doesn't matter)
+  Help screen (press Esc to go back)
+  --------------------------------------------
+  Game controls:
+  Use the numpad to enter X or O into a cell
+  
+      7 8 9   
+      4 5 6
+      1 2 3
+  
+  Pressing 7 will enter a X or O into cell 0,0
+  Pressing 8 will enter a X or O into cell 0,1
+  and so forth
+  
+  Incase you dont have a numpad, use the following keys to enter X or O into a cell
+  
+      Q W E
+      A S D
+      Z X C
+  
+  Pressing Q will enter a X or O into cell 0,0
+  Pressing W will enter a X or O into cell 0,1
+  and so forth
+  (Case doesn't matter)
 ";
         public HelpView() {
 
