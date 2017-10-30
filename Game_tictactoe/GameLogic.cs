@@ -240,7 +240,7 @@ namespace Game_tictactoe{
             Tuple<int, int> cell22 = new Tuple<int, int>(2,2);
 
             
-            KEY_POSITION_MAP.TryAdd(ConsoleKey.Q, cell00);
+            KEY_POSITION_MAP.Add(ConsoleKey.Q, cell00);
             KEY_POSITION_MAP.Add(ConsoleKey.NumPad7, cell00);
             
             KEY_POSITION_MAP.Add(ConsoleKey.W, cell01);
